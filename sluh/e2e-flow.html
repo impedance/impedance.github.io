@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SLUH — E2E поток</title>
+<style>
+:root{--bg:#f6f3ed;--paper:#fffdf9;--ink:#20252b;--muted:#68717a;--line:#d9d4cb;--blue:#2457d6;--blue-soft:#eaf0ff;--orange:#b85c27;--orange-soft:#fff0e6;--green:#2f7454;--green-soft:#e9f5ee;--red:#a9413b;--shadow:0 14px 34px rgba(30,36,44,.08)}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}
+.wrap{max-width:1160px;margin:auto;padding:28px 24px 56px}.hero{padding:18px 0 28px;border-bottom:1px solid var(--line)}.eyebrow{font-size:12px;text-transform:uppercase;letter-spacing:.12em;color:var(--blue);font-weight:850}
+h1{font-size:clamp(34px,5vw,60px);line-height:1;letter-spacing:-.045em;margin:10px 0 14px}.lede{margin:0;color:#46505a;font-size:18px;max-width:860px}
+.section{padding:34px 0;border-bottom:1px solid var(--line)}.section-head{display:grid;grid-template-columns:54px 1fr;gap:14px;margin-bottom:18px}.num{font-size:13px;color:var(--orange);font-weight:900;padding-top:5px}h2{font-size:26px;line-height:1.15;margin:0 0 5px}.section-head p{margin:0;color:var(--muted)}
+.layout{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(290px,.55fr);gap:14px}.flowbox,.detail{background:var(--paper);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow)}
+.flowbox{padding:16px;overflow:auto}.detail{padding:18px;align-self:start;position:sticky;top:14px}.detail .kicker{font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:var(--blue);font-weight:850}.detail h3{font-size:22px;margin:7px 0}.detail p{color:var(--muted);font-size:13px}.detail dl{display:grid;grid-template-columns:92px 1fr;gap:8px 10px;font-size:12px;margin:16px 0 0}.detail dt{font-weight:850;color:#4b545d}.detail dd{margin:0;color:var(--muted)}
+svg{min-width:820px;width:100%;height:auto;display:block}.step{cursor:pointer}.step rect{transition:.16s}.step:hover rect,.step.active rect{stroke-width:3;filter:drop-shadow(0 3px 4px rgba(0,0,0,.12))}.step text{pointer-events:none}
+.legend{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}.chip{display:inline-flex;gap:7px;align-items:center;border:1px solid var(--line);border-radius:999px;background:var(--paper);padding:6px 10px;font-size:12px}.dot{width:9px;height:9px;border-radius:2px}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.alt{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:14px}.alt b{display:block;margin-bottom:4px;font-size:13px}.alt p{font-size:12px;color:var(--muted);margin:0}.open{color:var(--red);font-weight:800}
+.trace{background:var(--green-soft);border:1px solid #c8e5d5;border-radius:16px;padding:16px 18px;font-size:14px}.trace b{color:var(--green)}.src{font-size:12px;color:var(--muted)}footer{padding-top:18px;color:var(--muted);font-size:12px}
+@media(max-width:900px){.layout{grid-template-columns:1fr}.detail{position:static}.grid{grid-template-columns:1fr 1fr}.wrap{padding:18px 14px 42px}}@media(max-width:560px){.grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="hero">
+<div class="eyebrow">SLUH · аннотированная блок-схема</div>
+<h1>Путь от датчика до решения заказчика</h1>
+<p class="lede">Основной сценарий показан одной линией. Выберите шаг — справа появятся вход, выход, ответственность и путь сбоя. Состояния деградации вынесены отдельно, чтобы штатный путь оставался читаемым.</p>
+</header>
+
+<section class="section">
+<div class="section-head"><div class="num">01</div><div><h2>Основной путь</h2><p>Синие шаги — SLUH, оранжевые — внешние возможности и границы полевого прогона, зелёный — сохранённые свидетельства.</p></div></div>
+<div class="legend"><span class="chip"><i class="dot" style="background:var(--blue)"></i> SLUH</span><span class="chip"><i class="dot" style="background:var(--orange)"></i> внешняя система</span><span class="chip"><i class="dot" style="background:var(--green)"></i> сохранённые свидетельства</span><span class="chip"><i class="dot" style="background:var(--red)"></i> деградация / OPEN</span></div>
+<div class="layout">
+<div class="flowbox">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 620" role="img" aria-label="E2E поток SLUH">
+<defs><marker id="a" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0L8 4L0 8z" fill="#59636d"/></marker></defs>
+<g class="step active" data-step="sensor"><rect x="40" y="42" width="180" height="78" rx="14" fill="#fff0e6" stroke="#b85c27" stroke-width="2"/><text x="130" y="68" text-anchor="middle" font-size="13" font-weight="850"><tspan x="130" dy="0">1 · Sensor / Simulator</tspan><tspan x="130" dy="17">датчик или симулятор</tspan></text><text x="130" y="104" text-anchor="middle" font-size="11" fill="#68717a">создаёт Observation</text></g>
+<g class="step" data-step="intake"><rect x="300" y="42" width="180" height="78" rx="14" fill="#eaf0ff" stroke="#2457d6" stroke-width="2"/><text x="390" y="68" text-anchor="middle" font-size="13" font-weight="850"><tspan x="390" dy="0">2 · Observation</tspan><tspan x="390" dy="17">Intake</tspan></text><text x="390" y="104" text-anchor="middle" font-size="10" fill="#68717a">проверка · дедупликация</text></g>
+<g class="step" data-step="algo"><rect x="560" y="42" width="260" height="78" rx="14" fill="#fff0e6" stroke="#b85c27" stroke-width="2"/><text x="690" y="72" text-anchor="middle" font-size="14" font-weight="850">3 · Recognition / Position / Tracking</text><text x="690" y="96" text-anchor="middle" font-size="11" fill="#68717a">результаты внешних модулей с версиями</text></g>
+<g stroke="#59636d" stroke-width="2" fill="none" marker-end="url(#a)"><path d="M220 81H300"/><path d="M480 81H560"/></g>
+
+<g class="step" data-step="target"><rect x="560" y="190" width="260" height="78" rx="14" fill="#eaf0ff" stroke="#2457d6" stroke-width="2"/><text x="690" y="220" text-anchor="middle" font-size="14" font-weight="850">4 · PotentialTarget / Track</text><text x="690" y="244" text-anchor="middle" font-size="11" fill="#68717a">текущее состояние + история</text></g>
+<g class="step" data-step="map"><rect x="300" y="190" width="180" height="78" rx="14" fill="#eaf0ff" stroke="#2457d6" stroke-width="2"/><text x="390" y="220" text-anchor="middle" font-size="14" font-weight="850">5 · Карта оператора</text><text x="390" y="242" text-anchor="middle" font-size="10" fill="#68717a"><tspan x="390" dy="0">несколько целей · обновления</tspan><tspan x="390" dy="13">в реальном времени</tspan></text></g>
+<g class="step" data-step="audio"><rect x="40" y="190" width="180" height="78" rx="14" fill="#eaf0ff" stroke="#2457d6" stroke-width="2"/><text x="130" y="220" text-anchor="middle" font-size="14" font-weight="850">6 · Аудио (Audio)</text><text x="130" y="244" text-anchor="middle" font-size="11" fill="#68717a">воспроизведение связанного аудио</text></g>
+<g stroke="#59636d" stroke-width="2" fill="none" marker-end="url(#a)"><path d="M690 120V190"/><path d="M560 229H480"/><path d="M300 229H220"/></g>
+
+<g class="step" data-step="decision"><rect x="40" y="340" width="180" height="78" rx="14" fill="#eaf0ff" stroke="#2457d6" stroke-width="2"/><text x="130" y="370" text-anchor="middle" font-size="14" font-weight="850">7 · Confirm / Reject</text><text x="130" y="394" text-anchor="middle" font-size="11" fill="#68717a">idempotent действие</text></g>
+<g class="step" data-step="evidence"><rect x="300" y="340" width="180" height="78" rx="14" fill="#e9f5ee" stroke="#2f7454" stroke-width="2"/><text x="390" y="370" text-anchor="middle" font-size="14" font-weight="850">8 · Evidence — свидетельства</text><text x="390" y="394" text-anchor="middle" font-size="11" fill="#68717a">решение + trace сохранены</text></g>
+<g class="step" data-step="gt"><rect x="560" y="340" width="260" height="78" rx="14" fill="#fff0e6" stroke="#b85c27" stroke-width="2"/><text x="690" y="370" text-anchor="middle" font-size="14" font-weight="850">9 · Ground Truth — сравнение</text><text x="690" y="394" text-anchor="middle" font-size="11" fill="#68717a">независимые свидетельства</text></g>
+<g stroke="#59636d" stroke-width="2" fill="none" marker-end="url(#a)"><path d="M130 268V340"/><path d="M220 379H300"/><path d="M480 379H560"/></g>
+
+<g class="step" data-step="customer"><rect x="300" y="492" width="340" height="82" rx="14" fill="#fffdf9" stroke="#20252b" stroke-width="2"/><text x="470" y="524" text-anchor="middle" font-size="15" font-weight="900">10 · Customer Decision — решение заказчика</text><text x="470" y="550" text-anchor="middle" font-size="11" fill="#68717a">продолжить · пересмотреть · остановить</text></g>
+<path d="M690 418V454H470V492" fill="none" stroke="#59636d" stroke-width="2" marker-end="url(#a)"/>
+<text x="446" y="151" text-anchor="middle" font-size="11" fill="#68717a">correlation ID · временные метки · версии алгоритмов</text>
+<text x="446" y="300" text-anchor="middle" font-size="11" fill="#68717a">OperatorDecision не изменяет жизненный цикл Track</text>
+<text x="446" y="454" text-anchor="middle" font-size="11" fill="#68717a">Ground Truth не создаётся самой системой</text>
+</svg>
+</div>
+<aside class="detail">
+<div class="kicker" id="k">ШАГ 01</div><h3 id="t">Sensor / Simulator — датчик или симулятор</h3><p id="d">Источник наблюдения. Реальный датчик и симулятор используют один логический Sensor Protocol.</p>
+<dl><dt>Вход</dt><dd id="i">акустический сигнал / тестовый сценарий</dd><dt>Выход</dt><dd id="o">Observation</dd><dt>Кто отвечает</dt><dd id="r">датчик или внешний шлюз — источник факта</dd><dt>Что происходит при сбое</dt><dd id="f">нет данных / неверный формат / дубликат / опоздание</dd></dl>
+</aside>
+</div>
+</section>
+
+<section class="section">
+<div class="section-head"><div class="num">02</div><div><h2>Состояния деградации и альтернативные состояния</h2><p>Сбой не маскируется под «успех», а основной путь остаётся читаемым.</p></div></div>
+<div class="grid">
+<div class="alt"><b>Duplicate / invalid Observation — дубликат или неверное наблюдение</b><p>Дедупликация или явное отклонение; второй бизнес-факт не создаётся.</p></div>
+<div class="alt"><b>Тайм-аут алгоритма / недостаточно данных</b><p>Явное состояние; фиктивный успех не создаётся.</p></div>
+<div class="alt"><b>Missing audio — аудио недоступно</b><p>Недоступность указывается явно; блокирует ли она решение — <span class="open">OPEN</span>.</p></div>
+<div class="alt"><b>Target without position — цель без положения</b><p>PotentialTarget может существовать и отображаться без позиции.</p></div>
+<div class="alt"><b>Повторное подключение (Reconnect)</b><p>Свежий снимок → обновления в реальном времени; долговечное воспроизведение для MVP не обязательно.</p></div>
+<div class="alt"><b>Access isolation — изоляция доступа</b><p>Пользователь объекта A не получает объект B через чтение, аудио, обновления в реальном времени или команду.</p></div>
+<div class="alt"><b>Multi-target</b><p>Цели раздельны и различимы; точный N-target SLA — <span class="open">OPEN</span>.</p></div>
+<div class="alt"><b>Ground Truth mismatch — расхождение с Ground Truth</b><p>Без корректной синхронизации времени свидетельства полевого прогона недостоверны.</p></div>
+</div>
+</section>
+
+<section class="section">
+<div class="section-head"><div class="num">03</div><div><h2>Сквозная проверка</h2><p>Главная проверяемая способность — объяснить, почему цель появилась и какое решение было принято.</p></div></div>
+<div class="trace"><b>Прослеживаемость:</b> Observation → результаты алгоритмов → PotentialTarget/Track → операторская проекция → OperatorDecision → свидетельства FieldTrial. Время события ≠ времени приёма; версия алгоритма сохраняется; Ground Truth независим.</div>
+<p class="src">Источники: <code>project-brief.md §2</code>, <code>detection-position-track-v1.md</code>, <code>operator-api-auth-realtime-v1.md §§5–8</code>, <code>fitness-functions-v1.md</code>.</p>
+</section>
+<footer>Issue #57 · формат аннотированной блок-схемы · только визуализация</footer>
+</div>
+
+<script>
+const steps={
+sensor:["ШАГ 01","Sensor / Simulator — датчик или симулятор","Источник наблюдения. Реальный датчик и симулятор используют один логический Sensor Protocol.","акустический сигнал / синтетический тестовый сценарий","Observation","датчик или внешний шлюз — источник факта","нет данных / неверный формат / дубликат / опоздание"],
+intake:["ШАГ 02","Observation Intake","Проверяет вход, дедуплицирует и фиксирует время приёма отдельно от времени события.","вход в форме Observation","принятый / отклонённый / дублирующий Observation","SLUH Observation Intake","неверные данные / дубликат / опоздание"],
+algo:["ШАГ 03","Внешние алгоритмы","Recognizer, Position/Triangulation и Tracker/Association возвращают версионируемые результаты через адаптеры.","принятый Observation / связанные входы","RecognitionResult / PositionEstimate / AssociationResult","внешние команды + адаптеры SLUH","тайм-аут / недостаточно данных / ошибка"],
+target:["ШАГ 04","PotentialTarget / Track","SLUH поддерживает текущее состояние цели и историю движения. Multi-target обязателен.","принятые результаты с версиями","PotentialTarget + Track + история","модуль Target & Track","нет положения / устарело / конфликт порядка"],
+map:["ШАГ 05","Карта оператора","Оператор видит авторизованное текущее состояние нескольких целей и флаги деградации.","авторизованная проекция","карта + текущее состояние","Operator Validation + Access Control","повторное подключение / нет доступа / устарело"],
+audio:["ШАГ 06","Аудио (Audio)","Оператор слушает связанный фрагмент, если он доступен.","AudioReference","воспроизведение или явная недоступность","Operator Validation + хранилище","аудио отсутствует / недоступно"],
+decision:["ШАГ 07","Подтвердить / отклонить (Confirm / Reject)","Решение относится к PotentialTarget и сохраняется отдельно от жизненного цикла Track.","targetId + action + idempotencyKey","OperatorDecision","оператор + аудит SLUH","повторная попытка / конфликт решения"],
+evidence:["ШАГ 08","Сохранённые свидетельства","Трассировка сохраняет версии, времена и связи для последующего объяснения результата.","ссылки на Observation, результаты, цель и решение","набор свидетельств с версиями","SLUH / Field Trial Evaluation — оценка полевого прогона","нет correlation ID / версии"],
+gt:["ШАГ 09","Ground Truth — сравнение","Системный результат сопоставляется с независимым Ground Truth.","свидетельства + independent GT","TrialMetrics","Field Trial Evaluation — оценка полевого прогона + источник Ground Truth","синхронизация времени / расхождение происхождения"],
+customer:["ШАГ 10","Customer Decision — решение заказчика","Заказчик принимает формальное решение по воспроизводимым свидетельствам.","TrialMetrics + пакет свидетельств","продолжить / пересмотреть / остановить","уполномоченный представитель заказчика","пороги / полномочия не согласованы"]
+};
+document.querySelectorAll(".step").forEach(n=>n.addEventListener("click",()=>{document.querySelectorAll(".step").forEach(x=>x.classList.remove("active"));n.classList.add("active");const s=steps[n.dataset.step],ids=["k","t","d","i","o","r","f"];ids.forEach((id,i)=>document.getElementById(id).textContent=s[i]);}));
+</script>
+</body>
+</html>
