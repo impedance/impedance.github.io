@@ -1,0 +1,94 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1160 650" role="img" aria-label="Архитектура SLUH">
+    <defs>
+      <marker id="a" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0L8 4L0 8z" fill="#5d6670"/></marker>
+    </defs>
+
+    <text x="32" y="30" font-size="12" font-weight="800" fill="#66707a">ВНЕШНИЙ КОНТУР</text>
+    <rect x="20" y="48" width="210" height="86" rx="14" fill="#fff0e6" stroke="#b85c27" stroke-width="2"/>
+    <text x="125" y="77" text-anchor="middle" font-size="14" font-weight="800">Датчики / симулятор</text>
+    <text x="125" y="105" text-anchor="middle" font-size="12" fill="#66707a">шлюз — опционально</text>
+    <text x="125" y="127" text-anchor="middle" font-size="11" fill="#66707a">Observation → приём</text>
+
+    <rect x="20" y="164" width="210" height="170" rx="14" fill="#fff0e6" stroke="#b85c27" stroke-width="2"/>
+    <text x="125" y="193" text-anchor="middle" font-size="14" font-weight="800">Внешние алгоритмы</text>
+    <text x="125" y="220" text-anchor="middle" font-size="12">Recognizer</text>
+    <text x="125" y="244" text-anchor="middle" font-size="12">Position / Triangulation</text>
+    <text x="125" y="268" text-anchor="middle" font-size="12">Tracker / Association</text>
+    <text x="125" y="299" text-anchor="middle" font-size="11" fill="#a9413b">среда выполнения / пороги — OPEN</text>
+
+    <rect x="20" y="366" width="210" height="102" rx="14" fill="#fff0e6" stroke="#b85c27" stroke-width="2"/>
+    <text x="125" y="397" text-anchor="middle" font-size="14" font-weight="800">Ground Truth</text>
+    <text x="125" y="420" text-anchor="middle" font-size="12" fill="#66707a">независимый источник</text>
+    <text x="125" y="444" text-anchor="middle" font-size="11" fill="#a9413b">формат / синхронизация — OPEN</text>
+
+    <rect x="270" y="48" width="610" height="500" rx="22" fill="#eaf0ff" stroke="#2457d6" stroke-width="3"/>
+    <text x="575" y="82" text-anchor="middle" font-size="18" font-weight="900">SLUH · модульный монолит</text>
+    <text x="575" y="103" text-anchor="middle" font-size="11" fill="#66707a">один основной компонент · внутренние вызовы in-process</text>
+
+    <g class="node active" data-module="intake">
+      <rect x="296" y="126" width="255" height="108" rx="14" fill="#fffdf9" stroke="#2457d6" stroke-width="2"/>
+      <text x="423" y="153" text-anchor="middle" font-size="14" font-weight="850">1 · Observation Intake</text>
+      <text x="423" y="177" text-anchor="middle" font-size="12" fill="#66707a">проверка · дедупликация · время приёма</text>
+      <text x="423" y="198" text-anchor="middle" font-size="12" fill="#66707a">граница Sensor Protocol</text>
+    </g>
+    <g class="node" data-module="algo">
+      <rect x="588" y="126" width="255" height="108" rx="14" fill="#fffdf9" stroke="#2457d6" stroke-width="2"/>
+      <text x="716" y="153" text-anchor="middle" font-size="14" font-weight="850">2 · Algorithm Integration</text>
+      <text x="716" y="177" text-anchor="middle" font-size="12" fill="#66707a">адаптеры · тайм-аут · correlation ID</text>
+      <text x="716" y="198" text-anchor="middle" font-size="12" fill="#66707a">результаты с версией</text>
+    </g>
+    <g class="node" data-module="target">
+      <rect x="296" y="258" width="255" height="108" rx="14" fill="#fffdf9" stroke="#2457d6" stroke-width="2"/>
+      <text x="423" y="285" text-anchor="middle" font-size="14" font-weight="850">3 · Target &amp; Track</text>
+      <text x="423" y="309" text-anchor="middle" font-size="12" fill="#66707a">PotentialTarget · Track · история</text>
+      <text x="423" y="330" text-anchor="middle" font-size="12" fill="#66707a">несколько целей · обязательно (multi-target)</text>
+    </g>
+    <g class="node" data-module="operator">
+      <rect x="588" y="258" width="255" height="108" rx="14" fill="#fffdf9" stroke="#2457d6" stroke-width="2"/>
+      <text x="716" y="285" text-anchor="middle" font-size="14" font-weight="850">4 · Operator Validation</text>
+      <text x="716" y="309" text-anchor="middle" font-size="12" fill="#66707a">карта · аудио · подтвердить / отклонить</text>
+      <text x="716" y="330" text-anchor="middle" font-size="12" fill="#66707a">обновления в реальном времени</text>
+    </g>
+    <g class="node" data-module="trial">
+      <rect x="296" y="390" width="255" height="108" rx="14" fill="#fffdf9" stroke="#2457d6" stroke-width="2"/>
+      <text x="423" y="409" text-anchor="middle" font-size="14" font-weight="850"><tspan x="423" dy="0">5 · Field Trial Evaluation</tspan><tspan x="423" dy="18">оценка полевого прогона</tspan></text>
+      <text x="423" y="454" text-anchor="middle" font-size="12" fill="#66707a">Ground Truth · TrialMetrics</text>
+      <text x="423" y="474" text-anchor="middle" font-size="12" fill="#66707a">пакет свидетельств</text>
+    </g>
+    <g class="node" data-module="access">
+      <rect x="588" y="390" width="255" height="108" rx="14" fill="#fffdf9" stroke="#2457d6" stroke-width="2"/>
+      <text x="716" y="417" text-anchor="middle" font-size="14" font-weight="850">6 · Access Control</text>
+      <text x="716" y="441" text-anchor="middle" font-size="12" fill="#66707a">идентичность · область объекта / зоны</text>
+      <text x="716" y="462" text-anchor="middle" font-size="11" fill="#a9413b">IdP / роли — OPEN</text>
+    </g>
+
+    <rect x="916" y="48" width="220" height="102" rx="14" fill="#fffdf9" stroke="#5d6670" stroke-width="2"/>
+    <text x="1026" y="78" text-anchor="middle" font-size="14" font-weight="800">Браузер оператора</text>
+    <text x="1026" y="102" text-anchor="middle" font-size="12" fill="#66707a">карта · аудио · решение</text>
+    <text x="1026" y="124" text-anchor="middle" font-size="11" fill="#66707a">снимок + обновления в реальном времени</text>
+
+    <rect x="916" y="180" width="220" height="88" rx="14" fill="#fff0e6" stroke="#b85c27" stroke-width="2" stroke-dasharray="7 5"/>
+    <text x="1026" y="211" text-anchor="middle" font-size="14" font-weight="800">Провайдер карты</text>
+    <text x="1026" y="237" text-anchor="middle" font-size="11" fill="#a9413b">поставщик / офлайн-режим — OPEN</text>
+
+    <rect x="916" y="304" width="220" height="94" rx="14" fill="#e9f5ee" stroke="#2f7454" stroke-width="2"/>
+    <text x="1026" y="326" text-anchor="middle" font-size="14" font-weight="800"><tspan x="1026" dy="0">Relational + geo —</tspan><tspan x="1026" dy="18">реляционное и геоданное</tspan><tspan x="1026" dy="18">хранилище</tspan></text>
+    <text x="1026" y="380" text-anchor="middle" font-size="12" fill="#66707a">система учёта фактов</text>
+    <text x="1026" y="394" text-anchor="middle" font-size="11" fill="#a9413b">поставщик — OPEN</text>
+
+    <rect x="916" y="428" width="220" height="110" rx="14" fill="#e9f5ee" stroke="#2f7454" stroke-width="2"/>
+    <text x="1026" y="452" text-anchor="middle" font-size="14" font-weight="800"><tspan x="1026" dy="0">Audio blob / file —</tspan><tspan x="1026" dy="18">аудиохранилище</tspan></text>
+    <text x="1026" y="493" text-anchor="middle" font-size="12" fill="#66707a"><tspan x="1026" dy="0">семантика хранения</tspan><tspan x="1026" dy="15">двоичных данных</tspan></text>
+    <text x="1026" y="526" text-anchor="middle" font-size="11" fill="#a9413b">срок хранения / формат — OPEN</text>
+
+    <g stroke="#5d6670" stroke-width="2" fill="none" marker-end="url(#a)">
+      <path d="M230 90H296"/>
+      <path d="M551 180H588"/>
+      <path d="M551 312H588"/>
+      <path d="M843 312H916"/>
+      <path d="M880 444H916"/>
+      <path d="M296 444H230"/>
+    </g>
+    <path d="M230 240H588" fill="none" stroke="#b85c27" stroke-width="2" stroke-dasharray="6 5" marker-end="url(#a)"/>
+    <text x="408" y="231" text-anchor="middle" font-size="11" fill="#66707a">версионируемые адаптеры</text>
+  </svg>
