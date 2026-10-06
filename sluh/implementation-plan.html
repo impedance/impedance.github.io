@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SLUH — план реализации</title>
+<style>
+:root{--bg:#f6f3ed;--paper:#fffdf9;--ink:#20252b;--muted:#68717a;--line:#d9d4cb;--blue:#2457d6;--blue-soft:#eaf0ff;--orange:#b85c27;--orange-soft:#fff0e6;--green:#2f7454;--green-soft:#e9f5ee;--red:#a9413b;--red-soft:#fdecea;--shadow:0 14px 34px rgba(30,36,44,.08)}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}
+.wrap{max-width:1120px;margin:auto;padding:28px 24px 56px}.hero{display:grid;grid-template-columns:1.25fr .75fr;gap:26px;align-items:end;padding:18px 0 28px;border-bottom:1px solid var(--line)}
+.eyebrow{font-size:12px;text-transform:uppercase;letter-spacing:.12em;color:var(--blue);font-weight:850}h1{font-size:clamp(34px,5vw,60px);line-height:1;letter-spacing:-.045em;margin:10px 0 14px}.lede{margin:0;color:#46505a;font-size:18px;max-width:720px}
+.metrics{display:grid;grid-template-columns:1fr 1fr;gap:10px}.metric{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:14px 16px;box-shadow:var(--shadow)}.metric b{display:block;font-size:22px}.metric span{font-size:12px;color:var(--muted)}
+.section{padding:34px 0;border-bottom:1px solid var(--line)}.section-head{display:grid;grid-template-columns:54px 1fr;gap:14px;margin-bottom:18px}.num{font-size:13px;color:var(--orange);font-weight:900;padding-top:5px}h2{font-size:26px;line-height:1.15;margin:0 0 5px}.section-head p{margin:0;color:var(--muted)}
+.timeline{display:grid;grid-template-columns:1fr 4fr 4fr 2fr;gap:10px}.mile{min-height:230px;border-radius:18px;border:1px solid var(--line);background:var(--paper);padding:16px;position:relative;display:flex;flex-direction:column;box-shadow:var(--shadow)}.mile.free{border-top:5px solid var(--blue)}.mile.gated{border-top:5px solid var(--orange)}
+.week{font-size:11px;font-weight:850;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}.mile h3{font-size:17px;line-height:1.2;margin:8px 0}.dates{font-size:12px;color:var(--blue);font-weight:800}.mile p{font-size:13px;color:var(--muted);margin:10px 0}.tag{display:inline-block;padding:4px 8px;border-radius:999px;font-size:11px;font-weight:800;background:var(--blue-soft);color:#244a9f}.gated .tag{background:var(--orange-soft);color:#8f441e}.gate{margin-top:auto;border-top:1px solid var(--line);padding-top:10px;font-size:11px;color:#48525c}
+.flow{background:var(--paper);border:1px solid var(--line);border-radius:20px;padding:18px;box-shadow:var(--shadow);overflow:auto}svg{min-width:900px;width:100%;height:auto;display:block}
+.split{display:grid;grid-template-columns:1.15fr .85fr;gap:14px}.card{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:16px}.card h3{margin:0 0 8px;font-size:17px}.card p,.card li{font-size:13px;color:var(--muted)}.card ul{padding-left:18px;margin:8px 0}.risk{display:grid;grid-template-columns:86px 1fr;gap:10px;padding:11px 0;border-top:1px solid var(--line)}.risk:first-of-type{border-top:0}.sev{font-size:11px;font-weight:900;color:var(--orange)}
+.rule{padding:16px 18px;border-radius:16px;background:var(--green-soft);border:1px solid #c9e6d6;font-size:14px}.rule b{color:var(--green)}
+.open{color:var(--red);font-weight:800}.src{font-size:12px;color:var(--muted)}footer{padding-top:18px;font-size:12px;color:var(--muted)}
+@media(max-width:900px){.hero{grid-template-columns:1fr}.timeline{grid-template-columns:1fr}.mile{min-height:0}.gate{position:static;margin-top:12px}.split{grid-template-columns:1fr}.wrap{padding:18px 14px 42px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="hero">
+  <div>
+    <div class="eyebrow">SLUH · план реализации</div>
+    <h1>11 недель до полевого прогона</h1>
+    <p class="lede">Четыре этапа с проверяемым результатом. Первые два идут без готовых реализаций внешних алгоритмов: продукт строится на симуляторе и заглушках, а реальные реализации подключаются позже через те же контракты.</p>
+  </div>
+  <div class="metrics">
+    <div class="metric"><b>11 недель</b><span>базовый горизонт</span></div>
+    <div class="metric"><b>4 этапа</b><span>наблюдаемый результат на каждом</span></div>
+    <div class="metric"><b>2 этапа</b><span>не зависят от реальных алгоритмов</span></div>
+    <div class="metric"><b>06.10</b><span>рабочий T0 · 2026</span></div>
+  </div>
+</header>
+
+<section class="section">
+  <div class="section-head"><div class="num">01</div><div><h2>Этапы</h2><p>Размер карточки пропорционален длительности. Даты рассчитаны от рабочего T0 = 06.10.2026 по текущей схеме 1 / 4 / 4 / 2 недели.</p></div></div>
+  <div class="timeline">
+    <article class="mile free">
+      <div class="week">Неделя 1</div><div class="dates">06.10–12.10</div>
+      <h3>Архитектура + инфраструктурный каркас</h3>
+      <span class="tag">без реальных алгоритмов</span>
+      <p>Архитектура, ADR, версионируемые контракты и черновики, стенды разработки и тестирования, доступ, базовая доставка и наблюдаемость.</p>
+      <div class="gate"><b>Выход:</b> разработчикам можно выдавать ограниченные задачи реализации.</div>
+    </article>
+    <article class="mile free">
+      <div class="week">Недели 2–5</div><div class="dates">13.10–09.11</div>
+      <h3>Операторское приложение + E2E на симуляторе</h3>
+      <span class="tag">сначала заглушки</span>
+      <p>Simulator → Observation Intake / дедупликация → заглушки алгоритмов → PotentialTarget/Track → карта + аудио → подтвердить/отклонить (confirm/reject) → сохранённое решение.</p>
+      <div class="gate"><b>Выход:</b> работающий пользовательский путь на стенде, включая состояния деградации и несколько целей (multi-target).</div>
+    </article>
+    <article class="mile gated">
+      <div class="week">Недели 6–9</div><div class="dates">10.11–07.12</div>
+      <h3>Реальные интеграции + полный E2E</h3>
+      <span class="tag">внешние входы нужны</span>
+      <p>Реальные Sensor Protocol, Recognizer, Position/Triangulation и Tracker/Association заменяют заглушки через те же адаптеры.</p>
+      <div class="gate"><b>Выход:</b> реальный сквозной сценарий на стенде интеграции и измеряемые свидетельства прослеживаемости, задержки и ошибок.</div>
+    </article>
+    <article class="mile gated">
+      <div class="week">Недели 10–11</div><div class="dates">08.12–21.12</div>
+      <h3>Полевой прогон + свидетельства</h3>
+      <span class="tag">полевая контрольная точка</span>
+      <p>Ground Truth, согласованный протокол, TrialMetrics, пакет свидетельств и решение заказчика.</p>
+      <div class="gate"><b>Выход:</b> воспроизводимый результат полевого испытания.</div>
+    </article>
+  </div>
+</section>
+
+<section class="section">
+  <div class="section-head"><div class="num">MVP</div><div><h2>Реализация MVP / #15</h2><p>Это текущий способ реализации первого вертикального среза, а не новая архитектурная инварианта. Каноническая Solution Architecture и LikeC4-топология остаются без изменений.</p></div></div>
+  <div class="split">
+    <div class="card"><h3>Стек первого среза</h3><ul><li><b>Backend:</b> Go.</li><li><b>Хранилище:</b> PostgreSQL + PostGIS как единый первичный источник данных.</li><li><b>Web UI:</b> серверные Go templates + HTMX.</li><li><b>Карта:</b> MapLibre GL JS; поставщик карт и тайлов остаётся <span class="open">OPEN</span>.</li></ul></div>
+    <div class="card"><h3>Сознательные ограничения</h3><ul><li>Без React/Vite и без внешнего Kafka/RabbitMQ/NATS-брокера на первом срезе.</li><li>Ограниченная очередь/буфер внутри процесса, вместимость рабочих пулов и явные метрики обратного давления/перегрузки.</li><li>Внешний шлюз — только опциональная граница; обязательным компонентом SLUH он не является.</li><li>Брокер остаётся будущей опцией только при измеренном обосновании: устойчивое буферирование/воспроизведение, пиковая нагрузка, разветвление потребителей, независимое масштабирование или изоляция отказов.</li></ul></div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="section-head"><div class="num">02</div><div><h2>Зависимости</h2><p>Ключевой принцип плана: задержка внешнего алгоритма не должна останавливать независимую продуктовую работу.</p></div></div>
+  <div class="flow">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1040 450" role="img" aria-label="Зависимости этапов SLUH и реализация MVP #15">
+    <defs><marker id="ar" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0L8 4L0 8z" fill="#5e6670"/></marker></defs>
+    <text x="22" y="28" font-size="11" font-weight="900" fill="#68717a">НЕЗАВИСИМЫЙ ПОТОК</text>
+    <rect x="20" y="48" width="210" height="90" rx="14" fill="#eaf0ff" stroke="#2457d6" stroke-width="2"/>
+    <text x="125" y="78" text-anchor="middle" font-size="14" font-weight="850">Этап 1</text><text x="125" y="101" text-anchor="middle" font-size="12">архитектура + инфраструктура</text><text x="125" y="121" text-anchor="middle" font-size="11" fill="#68717a">1 неделя</text>
+    <rect x="280" y="48" width="250" height="90" rx="14" fill="#eaf0ff" stroke="#2457d6" stroke-width="2"/>
+    <text x="405" y="78" text-anchor="middle" font-size="14" font-weight="850">Этап 2</text><text x="405" y="101" text-anchor="middle" font-size="12">операторское приложение + E2E на симуляторе</text><text x="405" y="121" text-anchor="middle" font-size="11" fill="#68717a">4 недели · без реальных алгоритмов</text>
+    <line x1="230" y1="93" x2="280" y2="93" stroke="#5e6670" stroke-width="2" marker-end="url(#ar)"/>
+
+    <text x="22" y="192" font-size="11" font-weight="900" fill="#68717a">ВНЕШНИЕ ВХОДЫ</text>
+    <rect x="20" y="210" width="165" height="66" rx="12" fill="#fff0e6" stroke="#b85c27" stroke-width="2"/><text x="102" y="237" text-anchor="middle" font-size="12" font-weight="800">Sensor Protocol</text><text x="102" y="257" text-anchor="middle" font-size="10" fill="#68717a">примеры + время + аудио</text>
+    <rect x="205" y="210" width="165" height="66" rx="12" fill="#fff0e6" stroke="#b85c27" stroke-width="2"/><text x="287" y="237" text-anchor="middle" font-size="12" font-weight="800">Recognizer</text><text x="287" y="257" text-anchor="middle" font-size="10" fill="#68717a">контракт + среда выполнения</text>
+    <rect x="390" y="210" width="165" height="66" rx="12" fill="#fff0e6" stroke="#b85c27" stroke-width="2"/><text x="472" y="237" text-anchor="middle" font-size="12" font-weight="800">Position</text><text x="472" y="257" text-anchor="middle" font-size="10" fill="#68717a">контракт триангуляции</text>
+    <rect x="575" y="210" width="165" height="66" rx="12" fill="#fff0e6" stroke="#b85c27" stroke-width="2"/><text x="657" y="237" text-anchor="middle" font-size="12" font-weight="800">Tracker</text><text x="657" y="257" text-anchor="middle" font-size="10" fill="#68717a">контракт связывания</text>
+
+    <rect x="620" y="48" width="190" height="90" rx="14" fill="#fff0e6" stroke="#b85c27" stroke-width="2"/>
+    <text x="715" y="78" text-anchor="middle" font-size="14" font-weight="850">Этап 3</text><text x="715" y="101" text-anchor="middle" font-size="12">реальные интеграции</text><text x="715" y="121" text-anchor="middle" font-size="11" fill="#68717a">4 недели</text>
+    <rect x="850" y="48" width="170" height="90" rx="14" fill="#fff0e6" stroke="#b85c27" stroke-width="2"/>
+    <text x="935" y="78" text-anchor="middle" font-size="14" font-weight="850">Этап 4</text><text x="935" y="101" text-anchor="middle" font-size="12">полевой прогон</text><text x="935" y="121" text-anchor="middle" font-size="11" fill="#68717a">2 недели</text>
+    <line x1="530" y1="93" x2="620" y2="93" stroke="#5e6670" stroke-width="2" marker-end="url(#ar)"/>
+    <line x1="810" y1="93" x2="850" y2="93" stroke="#5e6670" stroke-width="2" marker-end="url(#ar)"/>
+    <path d="M102 210V166H715V138" fill="none" stroke="#b85c27" stroke-width="2" stroke-dasharray="6 5" marker-end="url(#ar)"/>
+    <path d="M287 210V178H715V138" fill="none" stroke="#b85c27" stroke-width="2" stroke-dasharray="6 5" marker-end="url(#ar)"/>
+    <path d="M472 210V190H715V138" fill="none" stroke="#b85c27" stroke-width="2" stroke-dasharray="6 5" marker-end="url(#ar)"/>
+    <path d="M657 210V202H715V138" fill="none" stroke="#b85c27" stroke-width="2" stroke-dasharray="6 5" marker-end="url(#ar)"/>
+
+    <rect x="770" y="210" width="250" height="66" rx="12" fill="#fdecea" stroke="#a9413b" stroke-width="2"/>
+    <text x="895" y="236" text-anchor="middle" font-size="12" font-weight="850">Полевая контрольная точка</text><text x="895" y="256" text-anchor="middle" font-size="10" fill="#68717a">площадка + Ground Truth + пороги + полномочия</text>
+    <path d="M895 210V138" fill="none" stroke="#a9413b" stroke-width="2" stroke-dasharray="6 5" marker-end="url(#ar)"/>
+    <text x="520" y="328" text-anchor="middle" font-size="12" fill="#68717a">Сплошные стрелки — путь поставки · пунктир — внешняя контрольная точка, которая может сдвинуть только зависимый этап</text>
+    <rect x="20" y="350" width="1000" height="78" rx="14" fill="#e9f5ee" stroke="#2f7454" stroke-width="2"/>
+    <text x="40" y="375" font-size="13" font-weight="850" fill="#2f7454">Реализация MVP / #15</text>
+    <text x="40" y="398" font-size="11" fill="#20252b">Go · PostgreSQL + PostGIS · Go templates + HTMX · MapLibre GL JS · без React/Vite и внешнего брокера</text>
+    <text x="40" y="416" font-size="11" fill="#68717a">Ограниченная очередь/буфер внутри процесса · обратное давление и метрики перегрузки · внешний шлюз только опциональный</text>
+  </svg>
+  </div>
+  <div class="rule"><b>Правило contract-first:</b> версионируемый черновик → симулятор/заглушка → независимый E2E → замена заглушки через тот же адаптер → отдельная приёмка реальной интеграции.</div>
+</section>
+
+<section class="section">
+  <div class="section-head"><div class="num">03</div><div><h2>Критерий готовности этапов</h2><p>Не «мы написали код», а наблюдаемый результат, который можно проверить.</p></div></div>
+  <div class="split">
+    <div class="card">
+      <h3>Контрольные точки приёмки</h3>
+      <ul>
+        <li><b>1:</b> архитектурные границы и контракты достаточны для ограниченных задач; стенд доступен.</li>
+        <li><b>2:</b> E2E на симуляторе проходит до карты и аудио, включая confirm/reject; решение сохраняется после перезагрузки.</li>
+        <li><b>3:</b> реальные реализации заменяют заглушки без переписывания продуктового потока.</li>
+        <li><b>4:</b> TrialMetrics воспроизводимы из свидетельств + независимый Ground Truth.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Что пока OPEN</h3>
+      <ul>
+        <li>финальные пороги приёмки заказчиком;</li>
+        <li>источник Ground Truth / допуск синхронизации времени;</li>
+        <li>ограничения развёртывания и сетевого подключения;</li>
+        <li>политика карты/offline;</li>
+        <li>точные сроки внешних поставок контрактов и сред выполнения.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="section-head"><div class="num">04</div><div><h2>Риски и правило перепланирования</h2><p>План специально отделяет независимую разработку от внешних зависимостей.</p></div></div>
+  <div class="card">
+    <div class="risk"><div class="sev">ВЫСОКИЙ</div><div><b>Поздний реальный Sensor / вход алгоритма.</b><br><span style="color:var(--muted)">Этапы 1–2 не останавливаются; сдвигается Этап 3 и зависимая полевая контрольная точка.</span></div></div>
+    <div class="risk"><div class="sev">ВЫСОКИЙ</div><div><b>Неподтверждённые пороги приёмки.</b><br><span style="color:var(--muted)">Не выдаём рабочие targets за контракт; фиксируем их в протокол полевого испытания.</span></div></div>
+    <div class="risk"><div class="sev">СРЕДНИЙ</div><div><b>Расхождение контракта между заглушкой и реальной реализацией.</b><br><span style="color:var(--muted)">Один версионируемый контракт адаптера и контрактные тесты.</span></div></div>
+  </div>
+  <p class="src">Источники: <code>customer-spec-v1.md §§3–6</code>, <code>project-brief.md §§7–8</code>. Старый план из 7 этапов заменён и здесь не используется.</p>
+</section>
+
+<footer>Issue #57 · текущий план 1w / 4w / 4w / 2w · даты рассчитаны от T0 2026-10-06</footer>
+</div>
+</body>
+</html>
