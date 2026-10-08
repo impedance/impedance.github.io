@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Toolset telemetry dashboard — rollout readiness</title>
+<style>
+:root { color-scheme: light dark; }
+body { font-family: system-ui, -apple-system, "Segoe UI", sans-serif; max-width: 1080px; margin: 0 auto; padding: 16px; line-height: 1.45; }
+h1 { font-size: 1.4rem; margin-bottom: 0; }
+.meta { color: #666; font-size: 0.85rem; margin: 4px 0 16px; }
+section { border: 1px solid #ccc; border-radius: 8px; padding: 12px 16px; margin: 12px 0; }
+h2 { font-size: 1.05rem; margin: 0 0 8px; }
+table { border-collapse: collapse; width: 100%; font-size: 0.85rem; }
+th, td { border: 1px solid #ccc; padding: 4px 8px; text-align: left; }
+th { background: rgba(127,127,127,0.12); }
+.num { text-align: right; font-variant-numeric: tabular-nums; }
+.banner { font-weight: bold; font-size: 1.1rem; padding: 10px 14px; border-radius: 8px; }
+.nogo { background: #fde8e8; border: 2px solid #c00; }
+.warn { background: #fff6dd; border: 2px solid #a80; }
+.pass { background: #e6f6e6; border: 2px solid #080; }
+ul.reasons { margin: 8px 0 0; }
+.note { font-size: 0.85rem; color: #555; }
+code { font-size: 0.82rem; }
+.bar { height: 10px; fill: #4682b4; }
+.error { color: #900; }
+#load-error { display: none; }
+</style>
+</head>
+<body>
+<h1>Toolset telemetry dashboard — rollout readiness</h1>
+<p class="meta" id="meta">loading snapshot.json …</p>
+<p id="load-error" class="error">Could not load <code>snapshot.json</code>. Serve this directory over HTTP (for example <code>python3 -m http.server</code>) or replace <code>snapshot.json</code> with a fresh export and reload. No data is fabricated: empty sections stay empty.</p>
+
+<section id="signal"><h2>Rollout signal</h2><div id="signal-banner" class="banner">…</div><ul class="reasons" id="signal-reasons"></ul>
+<p class="note">Deterministic rule, never model judgment. Thresholds: hidden high-usage ≥ <span id="t-hidden">5</span> calls, coverage ≥ <span id="t-cov">99%</span>, definition bytes saved ≥ <span id="t-bytes">10%</span>, plus a genuinely fresh ChatGPT smoke (server-side checks are not a substitute).</p></section>
+
+<section id="profile-compare"><h2>Full vs eager profile</h2><div id="profile-table"></div>
+<h3>Deferred tools (full-only; unavailable to eager ChatGPT)</h3><div id="deferred-list"></div></section>
+
+<section id="coverage"><h2>Telemetry coverage by the eager profile</h2><div id="coverage-summary"></div><div id="hidden-table"></div></section>
+
+<section id="pareto-backend"><h2>Usage Pareto by backend</h2><div id="backend-table"></div></section>
+
+<section id="pareto-tools"><h2>Top tools by calls and by wall time</h2><h3>By calls</h3><div id="tools-calls"></div><h3>By wall time (p50/p95)</h3><div id="tools-wall"></div></section>
+
+<section id="errors"><h2>Errors by class</h2><div id="errors-table"></div><div id="selection-errors"></div><p class="note" id="selection-note"></p></section>
+
+<section id="cache"><h2>Repeated-read / cache candidates</h2><div id="cache-table"></div><p class="note">Reads only. Process-local repeat evidence; under fallback scopes this is not same-agent proof.</p></section>
+
+<section id="transitions"><h2>Transitions and composite reads</h2><div id="transitions-block"></div><div id="composite-block"></div></section>
+
+<section id="before-after"><h2>Before / after</h2><p class="note" id="before-after-note"></p></section>
+
+<section id="export"><h2>Snapshot and publishing</h2>
+<p class="note">Regenerate: <code>make dashboard-snapshot</code> (reads the local telemetry store, summarizes the window, measures live tools/list footprints, writes <code>dashboard/snapshot.json</code>). Preview: serve this directory with <code>python3 -m http.server</code>. Replace <code>snapshot.json</code> and reload — no application rebuild needed. Publishing: keep the artifact in-repo or push to a private Pages branch only with explicit owner approval; never expose the live gateway publicly. The page makes no network requests except the relative <code>snapshot.json</code> fetch.</p></section>
+
+<script>
+"use strict";
+// Mirrored from internal/gateway/dashboard.go (EvaluateRollout). The page
+// displays the server-computed verdict; these constants document the rule
+// next to the banner. Changing them here does not change any verdict.
+var THRESHOLDS = { hiddenHighUsageCalls: 5, minCoverage: 0.99, minBytesSaved: 0.10 };
+
+function esc(s) {
+  return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+}
+function pct(x) { return (x * 100).toFixed(1) + "%"; }
+function barsvg(rows, getVal, getLabel) {
+  var max = 0, i;
+  for (i = 0; i < rows.length; i++) { if (getVal(rows[i]) > max) max = getVal(rows[i]); }
+  if (!(max > 0)) return "";
+  var h = rows.length * 16 + 4, out = '<svg width="100%" height="' + h + '" role="img">';
+  for (i = 0; i < rows.length; i++) {
+    var w = (getVal(rows[i]) / max * 100).toFixed(1);
+    out += '<rect class="bar" x="0" y="' + (i * 16 + 2) + '" width="' + w + '%" height="10"><title>' + esc(getLabel(rows[i])) + '</title></rect>';
+  }
+  return out + "</svg>";
+}
+function table(heads, rows) {
+  var h = "<table><thead><tr>", b = "", i, j;
+  for (i = 0; i < heads.length; i++) h += "<th>" + esc(heads[i][0]) + "</th>";
+  h += "</tr></thead><tbody>";
+  for (i = 0; i < rows.length; i++) {
+    b += "<tr>";
+    for (j = 0; j < rows[i].length; j++) {
+      b += '<td class="' + (heads[j][1] ? "num" : "") + '">' + rows[i][j] + "</td>";
+    }
+    b += "</tr>";
+  }
+  return h + b + "</tbody></table>";
+}
+function set(id, html) { document.getElementById(id).innerHTML = html; }
+
+function render(s) {
+  document.getElementById("meta").textContent =
+    "contract " + s.contract + " · generated " + s.generatedTs + " · window " + s.windowHours + "h · " + s.toolsetVersion + " · " + s.sourceNote;
+  var banner = document.getElementById("signal-banner");
+  banner.textContent = s.rollout.verdict;
+  banner.className = "banner " + (s.rollout.verdict === "PASS" ? "pass" : (s.rollout.verdict === "WARN" ? "warn" : "nogo"));
+  var rh = "", i;
+  for (i = 0; i < s.rollout.reasons.length; i++) rh += "<li>" + esc(s.rollout.reasons[i]) + "</li>";
+  set("signal-reasons", rh);
+
+  var saved = (s.bytesSavedRatio * 100).toFixed(1) + "%";
+  set("profile-table", table([["surface", 0], ["tools", 1], ["definition bytes", 1]],
+    [["full (production default)", s.full.tools, s.full.bytes],
+     ["eager candidate (thin)", s.eager.tools, s.eager.bytes],
+     ["saved", s.full.tools - s.eager.tools, saved]]));
+  set("deferred-list", "<p>" + s.deferredTools.map(esc).join(", ") + "</p>");
+
+  set("coverage-summary", "<p>Eager covers <strong>" + s.eagerCoveredCalls + " / " + s.totalCalls +
+    "</strong> observed included calls (" + pct(s.coverageRatio) + "). Hidden tools are unavailable to eager ChatGPT, not deferred.</p>");
+  if (s.hiddenTools.length === 0) {
+    set("hidden-table", '<p class="note">No observed usage of hidden tools in this window.</p>');
+  } else {
+    var hr = [];
+    for (i = 0; i < s.hiddenTools.length; i++) {
+      var h = s.hiddenTools[i];
+      hr.push([esc(h.tool), h.calls, h.ok, h.errors]);
+    }
+    set("hidden-table", "<h3>Hidden tools with observed usage</h3>" + table([["tool", 0], ["calls", 1], ["ok", 1], ["errors", 1]], hr));
+  }
+
+  var br = [];
+  for (i = 0; i < s.perBackend.length; i++) {
+    var b = s.perBackend[i];
+    br.push([esc(b.backend), b.calls, b.ok, b.errors, pct(b.shareWallTime)]);
+  }
+  set("backend-table", table([["backend", 0], ["calls", 1], ["ok", 1], ["errors", 1], ["wall share", 1]], br) +
+    barsvg(s.perBackend, function (r) { return r.calls; }, function (r) { return r.backend + " " + r.calls; }));
+
+  var cr = [];
+  for (i = 0; i < s.topToolsByCalls.length; i++) {
+    var c = s.topToolsByCalls[i];
+    cr.push([esc(c.tool), c.calls, c.ok, c.errors, (c.errorRate * 100).toFixed(1) + "%"]);
+  }
+  set("tools-calls", table([["tool", 0], ["calls", 1], ["ok", 1], ["errors", 1], ["err%", 1]], cr));
+  var wr = [];
+  for (i = 0; i < s.topToolsByWallTime.length; i++) {
+    var w = s.topToolsByWallTime[i];
+    wr.push([esc(w.tool), w.calls, pct(w.shareWallTime), w.p50Ms, w.p95Ms]);
+  }
+  set("tools-wall", table([["tool", 0], ["calls", 1], ["wall share", 1], ["p50 ms", 1], ["p95 ms", 1]], wr) +
+    barsvg(s.topToolsByWallTime, function (r) { return r.shareWallTime; }, function (r) { return r.tool; }));
+
+  var er = [];
+  for (i = 0; i < s.errorsByClass.length; i++) er.push([esc(s.errorsByClass[i].errorClass), s.errorsByClass[i].count]);
+  set("errors-table", er.length ? table([["class", 0], ["count", 1]], er) : '<p class="note">No errors in window.</p>');
+  var sr = [];
+  for (i = 0; i < s.selectionErrors.length; i++) sr.push([esc(s.selectionErrors[i].errorClass), s.selectionErrors[i].count]);
+  set("selection-errors", sr.length ? "<h3>Selection-attributable (approximate)</h3>" + table([["class", 0], ["count", 1]], sr) : "");
+  document.getElementById("selection-note").textContent = s.selectionErrorsNote;
+
+  if (s.transitionsTrustworthy) {
+    var tr = [];
+    for (i = 0; i < s.transitions.length; i++) {
+      var t = s.transitions[i];
+      tr.push([esc(t.prevTool), esc(t.tool), t.count, pct(t.share)]);
+    }
+    set("transitions-block", "<h3>Transitions</h3>" + table([["prev", 0], ["tool", 0], ["count", 1], ["share", 1]], tr));
+  } else {
+    set("transitions-block", '<p class="note">Transitions: ' + esc(s.transitionsNote) + "</p>");
+  }
+  if (s.compositeReadCandidates.length) {
+    var mr = [];
+    for (i = 0; i < s.compositeReadCandidates.length; i++) {
+      var m = s.compositeReadCandidates[i];
+      mr.push([esc(m.tools.join(" → ")), m.count, pct(m.share)]);
+    }
+    set("composite-block", "<h3>Composite reads</h3>" + table([["pattern", 0], ["count", 1], ["share", 1]], mr) +
+      '<p class="note">' + esc(s.compositeNote) + "</p>");
+  } else {
+    set("composite-block", '<p class="note">Composite reads: ' + esc(s.compositeNote) + "</p>");
+  }
+  document.getElementById("before-after-note").textContent = s.beforeAfterNote;
+}
+
+fetch("snapshot.json", { cache: "no-store" }).then(function (r) {
+  if (!r.ok) throw new Error("http " + r.status);
+  return r.json();
+}).then(render).catch(function () {
+  document.getElementById("load-error").style.display = "block";
+  document.getElementById("meta").textContent = "snapshot.json not loaded.";
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,646 @@
+{
+  "contract": "toolset-telemetry-dashboard-v1",
+  "generatedTs": "2026-10-08T09:26:06.119398088Z",
+  "windowHours": 168,
+  "toolsetVersion": "0.1.0-pilot",
+  "sourceNote": "local operator telemetry store (sanitized aggregates only)",
+  "full": {
+    "tools": 162,
+    "bytes": 408343
+  },
+  "eager": {
+    "tools": 151,
+    "bytes": 384009
+  },
+  "bytesSavedRatio": 0.05959205863697925,
+  "deferredTools": [
+    "forgejo.create_label",
+    "forgejo.create_milestone",
+    "forgejo.create_repository",
+    "github.get_workflow_job_logs",
+    "sociotech.add_entity_responsible_user",
+    "sociotech.get_entity_history",
+    "sociotech.get_kri_stage",
+    "sociotech.get_kri_story",
+    "sociotech.get_workspace_info",
+    "sociotech.remove_entity_responsible_user",
+    "sociotech.search_users"
+  ],
+  "eventsTotal": 8155,
+  "eventsIncluded": 7621,
+  "healthCalls": 527,
+  "summaryCalls": 7,
+  "perBackend": [
+    {
+      "backend": "github",
+      "calls": 6234,
+      "ok": 2978,
+      "errors": 3256,
+      "totalDurationMs": 26846,
+      "shareWallTime": 0.06585276708686257
+    },
+    {
+      "backend": "sociotech",
+      "calls": 955,
+      "ok": 513,
+      "errors": 442,
+      "totalDurationMs": 357739,
+      "shareWallTime": 0.8775274918009062
+    },
+    {
+      "backend": "gitlab",
+      "calls": 197,
+      "ok": 31,
+      "errors": 166,
+      "totalDurationMs": 12568,
+      "shareWallTime": 0.030829083541223597
+    },
+    {
+      "backend": "book",
+      "calls": 193,
+      "ok": 125,
+      "errors": 68,
+      "totalDurationMs": 5,
+      "shareWallTime": 0.000012264912293612189
+    },
+    {
+      "backend": "forgejo",
+      "calls": 40,
+      "ok": 29,
+      "errors": 11,
+      "totalDurationMs": 10509,
+      "shareWallTime": 0.025778392658714098
+    },
+    {
+      "backend": "other",
+      "calls": 2,
+      "ok": 0,
+      "errors": 2,
+      "totalDurationMs": 0,
+      "shareWallTime": 0
+    }
+  ],
+  "topToolsByCalls": [
+    {
+      "tool": "github.create_agent_task_issue",
+      "backend": "github",
+      "operation": "write",
+      "calls": 1196,
+      "ok": 460,
+      "errors": 736,
+      "errorRate": 0.6153846153846154,
+      "p50Ms": 0,
+      "p95Ms": 17,
+      "shareWallTime": 0.017065398965331997,
+      "avgBytes": 140.53846153846155,
+      "truncatedRate": 0
+    },
+    {
+      "tool": "github.merge_pr",
+      "backend": "github",
+      "operation": "write",
+      "calls": 637,
+      "ok": 182,
+      "errors": 455,
+      "errorRate": 0.7142857142857143,
+      "p50Ms": 3,
+      "p95Ms": 17,
+      "shareWallTime": 0.006699095094770977,
+      "avgBytes": 178.14285714285714,
+      "truncatedRate": 0
+    },
+    {
+      "tool": "github.get_issue",
+      "backend": "github",
+      "operation": "read",
+      "calls": 572,
+      "ok": 59,
+      "errors": 513,
+      "errorRate": 0.8968531468531469,
+      "p50Ms": 0,
+      "p95Ms": 0,
+      "shareWallTime": 0.0075085793061493815,
+      "avgBytes": 233.5944055944056,
+      "truncatedRate": 0.10314685314685315
+    },
+    {
+      "tool": "github.add_sub_issue",
+      "backend": "github",
+      "operation": "write",
+      "calls": 546,
+      "ok": 182,
+      "errors": 364,
+      "errorRate": 0.6666666666666666,
+      "p50Ms": 0,
+      "p95Ms": 29,
+      "shareWallTime": 0.008099748078701488,
+      "avgBytes": 120,
+      "truncatedRate": 0
+    },
+    {
+      "tool": "github.get_file",
+      "backend": "github",
+      "operation": "read",
+      "calls": 424,
+      "ok": 58,
+      "errors": 366,
+      "errorRate": 0.8632075471698113,
+      "p50Ms": 0,
+      "p95Ms": 0,
+      "shareWallTime": 0.003274731582394454,
+      "avgBytes": 196.50235849056602,
+      "truncatedRate": 0
+    },
+    {
+      "tool": "github.get_agent_task",
+      "backend": "github",
+      "operation": "read",
+      "calls": 368,
+      "ok": 92,
+      "errors": 276,
+      "errorRate": 0.75,
+      "p50Ms": 4,
+      "p95Ms": 8,
+      "shareWallTime": 0.003922318951497178,
+      "avgBytes": 1009.25,
+      "truncatedRate": 0
+    },
+    {
+      "tool": "sociotech.list_projects",
+      "backend": "sociotech",
+      "operation": "read",
+      "calls": 288,
+      "ok": 40,
+      "errors": 248,
+      "errorRate": 0.8611111111111112,
+      "p50Ms": 0,
+      "p95Ms": 695,
+      "shareWallTime": 0.20492951354904862,
+      "avgBytes": 254.85416666666666,
+      "truncatedRate": 0.1388888888888889
+    },
+    {
+      "tool": "github.search_branches",
+      "backend": "github",
+      "operation": "read",
+      "calls": 275,
+      "ok": 275,
+      "errors": 0,
+      "errorRate": 0,
+      "p50Ms": 3,
+      "p95Ms": 5,
+      "shareWallTime": 0.002202778247932749,
+      "avgBytes": 212.83636363636364,
+      "truncatedRate": 0
+    },
+    {
+      "tool": "book.send_text",
+      "backend": "book",
+      "operation": "write",
+      "calls": 193,
+      "ok": 125,
+      "errors": 68,
+      "errorRate": 0.35233160621761656,
+      "p50Ms": 0,
+      "p95Ms": 0,
+      "shareWallTime": 0.000012264912293612189,
+      "avgBytes": 80.96891191709845,
+      "truncatedRate": 0
+    },
+    {
+      "tool": "github.add_pr_review",
+      "backend": "github",
+      "operation": "write",
+      "calls": 184,
+      "ok": 93,
+      "errors": 91,
+      "errorRate": 0.4945652173913043,
+      "p50Ms": 2,
+      "p95Ms": 5,
+      "shareWallTime": 0.0007653305271214005,
+      "avgBytes": 76.58695652173913,
+      "truncatedRate": 0
+    },
+    {
+      "tool": "github.get_pr_review_threads",
+      "backend": "github",
+      "operation": "read",
+      "calls": 184,
+      "ok": 184,
+      "errors": 0,
+      "errorRate": 0,
+      "p50Ms": 3,
+      "p95Ms": 5,
+      "shareWallTime": 0.0015502849139125807,
+      "avgBytes": 398.5054347826087,
+      "truncatedRate": 0.4945652173913043
+    },
+    {
+      "tool": "github.resolve_review_thread",
+      "backend": "github",
+      "operation": "write",
+      "calls": 184,
+      "ok": 184,
+      "errors": 0,
+      "errorRate": 0,
+      "p50Ms": 3,
+      "p95Ms": 5,
+      "shareWallTime": 0.001457071580481128,
+      "avgBytes": 87.98913043478261,
+      "truncatedRate": 0
+    },
+    {
+      "tool": "github.update_file",
+      "backend": "github",
+      "operation": "write",
+      "calls": 184,
+      "ok": 93,
+      "errors": 91,
+      "errorRate": 0.4945652173913043,
+      "p50Ms": 3,
+      "p95Ms": 9,
+      "shareWallTime": 0.0016361392999678659,
+      "avgBytes": 120.05434782608695,
+      "truncatedRate": 0
+    },
+    {
+      "tool": "github.update_issue",
+      "backend": "github",
+      "operation": "write",
+      "calls": 184,
+      "ok": 93,
+      "errors": 91,
+      "errorRate": 0.4945652173913043,
+      "p50Ms": 1,
+      "p95Ms": 4,
+      "shareWallTime": 0.0007089119305707845,
+      "avgBytes": 73.55434782608695,
+      "truncatedRate": 0
+    },
+    {
+      "tool": "sociotech.get_methodology_guide",
+      "backend": "sociotech",
+      "operation": "read",
+      "calls": 183,
+      "ok": 91,
+      "errors": 92,
+      "errorRate": 0.5027322404371585,
+      "p50Ms": 0,
+      "p95Ms": 0,
+      "shareWallTime": 0,
+      "avgBytes": 599.327868852459,
+      "truncatedRate": 0
+    }
+  ],
+  "topToolsByWallTime": [
+    {
+      "tool": "sociotech.list_projects",
+      "backend": "sociotech",
+      "operation": "read",
+      "calls": 288,
+      "ok": 40,
+      "errors": 248,
+      "errorRate": 0.8611111111111112,
+      "p50Ms": 0,
+      "p95Ms": 695,
+      "shareWallTime": 0.20492951354904862,
+      "avgBytes": 254.85416666666666,
+      "truncatedRate": 0.1388888888888889
+    },
+    {
+      "tool": "sociotech.get_hypothesis_map",
+      "backend": "sociotech",
+      "operation": "read",
+      "calls": 39,
+      "ok": 39,
+      "errors": 0,
+      "errorRate": 0,
+      "p50Ms": 1107,
+      "p95Ms": 1794,
+      "shareWallTime": 0.10905960011479958,
+      "avgBytes": 42511.153846153844,
+      "truncatedRate": 0.15384615384615385
+    },
+    {
+      "tool": "sociotech.get_kri",
+      "backend": "sociotech",
+      "operation": "read",
+      "calls": 39,
+      "ok": 39,
+      "errors": 0,
+      "errorRate": 0,
+      "p50Ms": 734,
+      "p95Ms": 1062,
+      "shareWallTime": 0.07021662288092978,
+      "avgBytes": 19176.74358974359,
+      "truncatedRate": 0
+    },
+    {
+      "tool": "sociotech.get_hypothesis_chain",
+      "backend": "sociotech",
+      "operation": "read",
+      "calls": 36,
+      "ok": 36,
+      "errors": 0,
+      "errorRate": 0,
+      "p50Ms": 775,
+      "p95Ms": 1124,
+      "shareWallTime": 0.0674643765622432,
+      "avgBytes": 51359.02777777778,
+      "truncatedRate": 0
+    },
+    {
+      "tool": "sociotech.get_project",
+      "backend": "sociotech",
+      "operation": "read",
+      "calls": 129,
+      "ok": 36,
+      "errors": 93,
+      "errorRate": 0.7209302325581395,
+      "p50Ms": 0,
+      "p95Ms": 915,
+      "shareWallTime": 0.06333846006667207,
+      "avgBytes": 558.1860465116279,
+      "truncatedRate": 0.27906976744186046
+    },
+    {
+      "tool": "sociotech.get_board_revision",
+      "backend": "sociotech",
+      "operation": "read",
+      "calls": 38,
+      "ok": 38,
+      "errors": 0,
+      "errorRate": 0,
+      "p50Ms": 659,
+      "p95Ms": 1051,
+      "shareWallTime": 0.06300976041720326,
+      "avgBytes": 294.2631578947368,
+      "truncatedRate": 0
+    },
+    {
+      "tool": "sociotech.check_board_access",
+      "backend": "sociotech",
+      "operation": "read",
+      "calls": 37,
+      "ok": 37,
+      "errors": 0,
+      "errorRate": 0,
+      "p50Ms": 666,
+      "p95Ms": 906,
+      "shareWallTime": 0.06000240392280955,
+      "avgBytes": 245.02702702702703,
+      "truncatedRate": 0
+    },
+    {
+      "tool": "sociotech.list_hypothesis_maps",
+      "backend": "sociotech",
+      "operation": "read",
+      "calls": 37,
+      "ok": 37,
+      "errors": 0,
+      "errorRate": 0,
+      "p50Ms": 697,
+      "p95Ms": 986,
+      "shareWallTime": 0.05986503690512109,
+      "avgBytes": 365.64864864864865,
+      "truncatedRate": 0
+    },
+    {
+      "tool": "sociotech.get_swot",
+      "backend": "sociotech",
+      "operation": "read",
+      "calls": 36,
+      "ok": 36,
+      "errors": 0,
+      "errorRate": 0,
+      "p50Ms": 676,
+      "p95Ms": 1027,
+      "shareWallTime": 0.059568226027615676,
+      "avgBytes": 7599.027777777777,
+      "truncatedRate": 0
+    },
+    {
+      "tool": "sociotech.get_metric_measurements",
+      "backend": "sociotech",
+      "operation": "read",
+      "calls": 36,
+      "ok": 36,
+      "errors": 0,
+      "errorRate": 0,
+      "p50Ms": 577,
+      "p95Ms": 942,
+      "shareWallTime": 0.054905106373584325,
+      "avgBytes": 741.1111111111111,
+      "truncatedRate": 0
+    },
+    {
+      "tool": "sociotech.search_board_team_members",
+      "backend": "sociotech",
+      "operation": "read",
+      "calls": 36,
+      "ok": 36,
+      "errors": 0,
+      "errorRate": 0,
+      "p50Ms": 465,
+      "p95Ms": 659,
+      "shareWallTime": 0.0408323460078937,
+      "avgBytes": 285,
+      "truncatedRate": 0
+    },
+    {
+      "tool": "sociotech.list_workspaces",
+      "backend": "sociotech",
+      "operation": "read",
+      "calls": 4,
+      "ok": 2,
+      "errors": 2,
+      "errorRate": 0.5,
+      "p50Ms": 471,
+      "p95Ms": 5875,
+      "shareWallTime": 0.018188864931426876,
+      "avgBytes": 284.25,
+      "truncatedRate": 0
+    },
+    {
+      "tool": "github.create_agent_task_issue",
+      "backend": "github",
+      "operation": "write",
+      "calls": 1196,
+      "ok": 460,
+      "errors": 736,
+      "errorRate": 0.6153846153846154,
+      "p50Ms": 0,
+      "p95Ms": 17,
+      "shareWallTime": 0.017065398965331997,
+      "avgBytes": 140.53846153846155,
+      "truncatedRate": 0
+    },
+    {
+      "tool": "github.add_sub_issue",
+      "backend": "github",
+      "operation": "write",
+      "calls": 546,
+      "ok": 182,
+      "errors": 364,
+      "errorRate": 0.6666666666666666,
+      "p50Ms": 0,
+      "p95Ms": 29,
+      "shareWallTime": 0.008099748078701488,
+      "avgBytes": 120,
+      "truncatedRate": 0
+    },
+    {
+      "tool": "github.get_issue",
+      "backend": "github",
+      "operation": "read",
+      "calls": 572,
+      "ok": 59,
+      "errors": 513,
+      "errorRate": 0.8968531468531469,
+      "p50Ms": 0,
+      "p95Ms": 0,
+      "shareWallTime": 0.0075085793061493815,
+      "avgBytes": 233.5944055944056,
+      "truncatedRate": 0.10314685314685315
+    }
+  ],
+  "errorsByClass": [
+    {
+      "errorClass": "invalid_input",
+      "count": 2690
+    },
+    {
+      "errorClass": "not_found",
+      "count": 355
+    },
+    {
+      "errorClass": "rate_limited",
+      "count": 275
+    },
+    {
+      "errorClass": "conflict_or_stale_revision",
+      "count": 189
+    },
+    {
+      "errorClass": "backend_unavailable",
+      "count": 159
+    },
+    {
+      "errorClass": "auth_required",
+      "count": 155
+    },
+    {
+      "errorClass": "forbidden",
+      "count": 116
+    },
+    {
+      "errorClass": "internal",
+      "count": 6
+    }
+  ],
+  "cacheCandidates": [
+    {
+      "tool": "sociotech.list_projects",
+      "calls": 288,
+      "duplicateCalls": 96,
+      "duplicateRate": 0.3333333333333333
+    },
+    {
+      "tool": "github.get_issue",
+      "calls": 572,
+      "duplicateCalls": 91,
+      "duplicateRate": 0.1590909090909091
+    },
+    {
+      "tool": "github.get_pr_review_threads",
+      "calls": 184,
+      "duplicateCalls": 91,
+      "duplicateRate": 0.4945652173913043
+    },
+    {
+      "tool": "forgejo.get_file",
+      "calls": 5,
+      "duplicateCalls": 2,
+      "duplicateRate": 0.4
+    },
+    {
+      "tool": "gitlab.get_mr_approvals",
+      "calls": 4,
+      "duplicateCalls": 2,
+      "duplicateRate": 0.5
+    },
+    {
+      "tool": "sociotech.get_kri",
+      "calls": 39,
+      "duplicateCalls": 2,
+      "duplicateRate": 0.05128205128205128
+    },
+    {
+      "tool": "forgejo.get_pr",
+      "calls": 3,
+      "duplicateCalls": 1,
+      "duplicateRate": 0.3333333333333333
+    },
+    {
+      "tool": "sociotech.get_board_revision",
+      "calls": 38,
+      "duplicateCalls": 1,
+      "duplicateRate": 0.02631578947368421
+    },
+    {
+      "tool": "sociotech.get_hypothesis_map",
+      "calls": 39,
+      "duplicateCalls": 1,
+      "duplicateRate": 0.02564102564102564
+    },
+    {
+      "tool": "sociotech.get_project",
+      "calls": 129,
+      "duplicateCalls": 1,
+      "duplicateRate": 0.007751937984496124
+    }
+  ],
+  "transitions": [],
+  "transitionsTrustworthy": false,
+  "transitionsNote": "unavailable: store is fallback-dominated (concurrent agents share one process session); transitions would mislead, so they are withheld",
+  "compositeReadCandidates": [],
+  "compositeNote": "unavailable: no repeated three-read pattern observed in transport sessions",
+  "totalCalls": 7621,
+  "eagerCoveredCalls": 7620,
+  "coverageRatio": 0.9998687836241963,
+  "hiddenTools": [
+    {
+      "tool": "sociotech_list_projects",
+      "calls": 1,
+      "ok": 0,
+      "errors": 1
+    }
+  ],
+  "hiddenHighUsage": [],
+  "selectionErrors": [
+    {
+      "errorClass": "invalid_input",
+      "count": 2690
+    },
+    {
+      "errorClass": "not_found",
+      "count": 355
+    }
+  ],
+  "selectionErrorsNote": "invalid_input/not_found counts are shown for context; attribution to tool selection (vs genuinely missing resources) is approximate without a profile-labeled A/B",
+  "rollout": {
+    "verdict": "NO-GO",
+    "reasons": [
+      "NO-GO: no genuinely fresh ChatGPT smoke run against the candidate profile; server-side tools/list checks are not a substitute",
+      "context: definition bytes saved are below the materiality bar, so there is no Pareto trade to accept"
+    ],
+    "thresholds": {
+      "hiddenHighUsageCalls": 5,
+      "minCoverage": 0.99,
+      "minBytesSaved": 0.1
+    },
+    "smokePassed": false,
+    "smokeNote": "no fresh ChatGPT smoke run has been performed against the candidate profile; server-side tools/list checks are not a substitute"
+  },
+  "beforeAfterNote": "before/after profile comparison is pending: production serves full, and profile-labeled thin-rollout telemetry does not exist yet; no post-rollout figures are shown or implied"
+}
