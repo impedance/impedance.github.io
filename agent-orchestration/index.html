@@ -1,0 +1,288 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Issue-driven agent orchestration — разбор, 09.10.2026</title>
+<style>
+  :root{
+    --bg:#07111a; --panel:#0d1b27; --panel2:#102332; --line:#244258;
+    --text:#eaf4f8; --muted:#9fb5c2; --accent:#67e8c7; --accent2:#7db7ff;
+    --warn:#f7c66b; --bad:#ff8f8f; --good:#8be39e; --ink:#061018;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0; background:
+      radial-gradient(circle at 10% -10%, #12344a 0, transparent 38%),
+      radial-gradient(circle at 90% 10%, #173546 0, transparent 32%),
+      var(--bg);
+    color:var(--text); font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+    line-height:1.55;
+  }
+  a{color:#94c7ff}
+  .wrap{max-width:1180px;margin:0 auto;padding:28px 22px 72px}
+  .hero{padding:34px 0 18px}
+  .eyebrow{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);font-weight:800}
+  h1{font-size:clamp(34px,6vw,68px);line-height:1;margin:10px 0 16px;letter-spacing:-.04em}
+  h2{font-size:clamp(24px,4vw,38px);line-height:1.1;margin:0 0 18px;letter-spacing:-.02em}
+  h3{font-size:19px;margin:0 0 8px}
+  p{margin:8px 0 14px}
+  .lead{font-size:20px;max-width:920px;color:#d6e7ee}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+  .chip{border:1px solid var(--line);background:#0a1721;border-radius:999px;padding:7px 11px;font-size:12px;color:#c6d9e2}
+  .grid{display:grid;gap:16px}
+  .g2{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .g3{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .g4{grid-template-columns:repeat(4,minmax(0,1fr))}
+  @media(max-width:850px){.g2,.g3,.g4{grid-template-columns:1fr}}
+  .card{
+    background:linear-gradient(180deg,rgba(16,35,50,.94),rgba(10,24,34,.94));
+    border:1px solid var(--line); border-radius:18px; padding:20px;
+    box-shadow:0 16px 48px rgba(0,0,0,.18)
+  }
+  .callout{border-left:4px solid var(--accent);padding:14px 16px;background:#0c2027;border-radius:0 14px 14px 0}
+  .callout.warn{border-left-color:var(--warn);background:#251f12}
+  .metric{font-size:33px;font-weight:850;letter-spacing:-.04em}
+  .muted{color:var(--muted)}
+  .small{font-size:12px;color:var(--muted)}
+  section{margin-top:54px}
+  .kicker{color:var(--accent);font-weight:750}
+  .verdict{display:grid;grid-template-columns:1.2fr .8fr;gap:16px;align-items:stretch;margin-top:28px}
+  @media(max-width:850px){.verdict{grid-template-columns:1fr}}
+  .score{display:flex;align-items:center;justify-content:center;min-height:210px;
+    background:linear-gradient(135deg,#123949,#0d2737);border:1px solid #2b5b6d;border-radius:20px}
+  .score strong{font-size:62px;line-height:1;color:var(--accent)}
+  .score span{display:block;text-align:center;color:#c3dbe5}
+  .svgbox{overflow:auto;padding:8px}
+  svg{max-width:100%;height:auto}
+  .barrow{display:grid;grid-template-columns:200px 1fr 60px;gap:10px;align-items:center;margin:9px 0;font-size:14px}
+  .bar{height:10px;border-radius:999px;background:#122a39;overflow:hidden}
+  .fill{height:100%;background:linear-gradient(90deg,var(--accent2),var(--accent))}
+  .fill.dim{background:linear-gradient(90deg,#4a6b80,#67e8c7);opacity:.75}
+  table{width:100%;border-collapse:collapse;font-size:14px;overflow:hidden;border-radius:14px}
+  th,td{padding:12px 11px;border-bottom:1px solid #203b4f;vertical-align:top}
+  th{text-align:left;color:#c8e2ed;background:#102536}
+  tr:last-child td{border-bottom:0}
+  tr.hl td{background:rgba(103,232,199,.06)}
+  .tag{display:inline-block;font-size:11px;padding:3px 7px;border-radius:999px;background:#173044;border:1px solid #2d5269;color:#bad2df;margin:2px}
+  .yes{color:var(--good);font-weight:750}.no{color:var(--bad);font-weight:750}.maybe{color:var(--warn);font-weight:750}
+  .project{position:relative;padding-top:24px}
+  .project:before{content:"";position:absolute;left:20px;top:0;width:42px;height:3px;border-radius:3px;background:var(--accent)}
+  .timeline{position:relative;padding-left:24px}
+  .timeline:before{content:"";position:absolute;left:6px;top:4px;bottom:4px;width:2px;background:#28485c}
+  .titem{position:relative;margin:0 0 20px}
+  .titem:before{content:"";position:absolute;left:-22px;top:7px;width:10px;height:10px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 4px #0a1a25}
+  code{background:#09151e;border:1px solid #203a4b;border-radius:6px;padding:2px 5px;color:#d4f5ec}
+  pre{background:#061019;border:1px solid #203a4b;border-radius:14px;padding:16px;overflow:auto;color:#d7ebf2;font-size:13px}
+  .toc{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}
+  .toc a{text-decoration:none;color:#cde4ec;border:1px solid #2a485b;background:#0a1822;padding:8px 10px;border-radius:10px;font-size:13px}
+  .src li{margin-bottom:9px;font-size:14px}
+  .footer{margin-top:64px;padding-top:20px;border-top:1px solid #20384a;color:#91a9b5;font-size:12px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="hero">
+    <div class="eyebrow">Agent orchestration research · 09.10.2026</div>
+    <h1>Issues как очередь для агентов: твой подход — мейнстрим</h1>
+    <p class="lead">ChatGPT ставит задачи в GitHub Issues с <code>task_contract v1</code>, агенты исполняют, открывают draft PR и постят EXECUTOR RESULT. Вопрос был: популярно ли это, что используют другие и есть ли доказуемо лучший формат. Короткий ответ — ты в мейнстриме, менять queue не надо; выигрыш в урезании контракта и телеметрии.</p>
+    <div class="chips">
+      <span class="chip">GitHub Issues + task_contract v1</span><span class="chip">san-obsid · 200+ issues</span><span class="chip">Agent HQ / Copilot era</span><span class="chip">single-user VDS</span>
+    </div>
+    <nav class="toc">
+      <a href="#now">Твой контур</a><a href="#popular">Популярность</a><a href="#compare">Сравнение</a>
+      <a href="#arxiv">Что говорит наука</a><a href="#plan">План из 6 шагов</a><a href="#kit">Готовые куски</a><a href="#sources">Источники</a>
+    </nav>
+  </header>
+
+  <section class="verdict">
+    <div class="card">
+      <div class="kicker">Главный вывод</div>
+      <h2>Оставь Issues. Урежь контракт. Добавь телеметрию.</h2>
+      <p>GitHub официально закрепил Issue → agent → PR как стандарт: Agent HQ (Universe 2025), Copilot coding agent из коробки. Ближайшие зрелые аналоги твоего UAW-контракта — <b>issue-orchestrator</b> (bounded runs в worktrees с gates) и <b>orchestrator-sh</b> (Issues = backend, labels = статус).</p>
+      <p>Академические harness'ы (SWE-bench, SWE-EVO) показывают: решает не YAML-обёртка, а <b>Outcome + machine-checkable Verification</b> (fail-to-pass тесты). Телеметрия не зависит от формата постановки — она идёт из OTLP/hooks, а issue number это идеальный correlation ID.</p>
+      <div class="callout"><b>Одна строка:</b><br>Issues побеждают для соло-VDS (совместимость + нулевой setup + issue ID как trace key). Markdown — supplement, beads / Linear — только при масштабировании на флот.</div>
+    </div>
+    <div class="score"><div><strong>24/25</strong><span>Issues + structured contract<br>лучший суммарный score для соло-VDS</span></div></div>
+  </section>
+
+  <section id="now">
+    <div class="kicker">01 · Твой контур сегодня</div>
+    <h2>Как устроен pipeline</h2>
+    <div class="card svgbox">
+    <svg viewBox="0 0 1000 210" font-family="Inter,system-ui,sans-serif" font-size="15">
+      <rect x="10" y="40" width="170" height="120" rx="14" fill="#10283a" stroke="#2b5b6d"/>
+      <text x="95" y="80" fill="#67e8c7" text-anchor="middle" font-weight="700">ChatGPT</text>
+      <text x="95" y="104" fill="#9fb5c2" text-anchor="middle">planner</text>
+      <text x="95" y="128" fill="#eaf4f8" text-anchor="middle">Issue + contract</text>
+      <rect x="215" y="40" width="170" height="120" rx="14" fill="#10283a" stroke="#2b5b6d"/>
+      <text x="300" y="80" fill="#67e8c7" text-anchor="middle" font-weight="700">Agent</text>
+      <text x="300" y="104" fill="#9fb5c2" text-anchor="middle">executor</text>
+      <text x="300" y="128" fill="#eaf4f8" text-anchor="middle">worktree + code</text>
+      <rect x="420" y="40" width="170" height="120" rx="14" fill="#10283a" stroke="#2b5b6d"/>
+      <text x="505" y="80" fill="#67e8c7" text-anchor="middle" font-weight="700">Draft PR</text>
+      <text x="505" y="104" fill="#9fb5c2" text-anchor="middle">tracked changes</text>
+      <text x="505" y="128" fill="#eaf4f8" text-anchor="middle">review + CI</text>
+      <rect x="625" y="40" width="170" height="120" rx="14" fill="#10283a" stroke="#2b5b6d"/>
+      <text x="710" y="80" fill="#67e8c7" text-anchor="middle" font-weight="700">EXECUTOR</text>
+      <text x="710" y="104" fill="#67e8c7" text-anchor="middle" font-weight="700">RESULT</text>
+      <text x="710" y="128" fill="#eaf4f8" text-anchor="middle">comment + evidence</text>
+      <rect x="830" y="40" width="160" height="120" rx="14" fill="#123949" stroke="#67e8c7"/>
+      <text x="910" y="80" fill="#67e8c7" text-anchor="middle" font-weight="700">Reviewer</text>
+      <text x="910" y="104" fill="#9fb5c2" text-anchor="middle">ACCEPT →</text>
+      <text x="910" y="128" fill="#eaf4f8" text-anchor="middle">landing</text>
+      <line x1="180" y1="100" x2="213" y2="100" stroke="#67e8c7" stroke-width="2"/>
+      <line x1="385" y1="100" x2="418" y2="100" stroke="#67e8c7" stroke-width="2"/>
+      <line x1="590" y1="100" x2="623" y2="100" stroke="#67e8c7" stroke-width="2"/>
+      <line x1="795" y1="100" x2="828" y2="100" stroke="#67e8c7" stroke-width="2"/>
+    </svg>
+    </div>
+    <div class="grid g4" style="margin-top:16px">
+      <div class="card"><h3>Contract</h3><p class="muted">YAML task_contract v1: kind, profile, base SHA, publication (branch + draft PR), risk/protected, evidence. Пример — issue #191 в san-obsid.</p></div>
+      <div class="card"><h3>Outcome + Scope</h3><p class="muted">Проверяемый результат, exclusions, must-read файлы, allowed writes. Агент знает границы до старта.</p></div>
+      <div class="card"><h3>Invariants</h3><p class="muted">Pinned protocol agent-workflow v1, immutable _raw, запрет merge/visibility changes. Защита от агента-энтузиаста.</p></div>
+      <div class="card"><h3>Verification</h3><p class="muted">Run receipts, claim→source spot checks, frozen pass rule. Reviewer может принять честный negative report.</p></div>
+    </div>
+  </section>
+
+  <section id="popular">
+    <div class="kicker">02 · Насколько это популярно</div>
+    <h2>Ты не изобрёл велосипед — ты на главной дороге</h2>
+    <div class="callout warn"><b>Важно:</b> «популярность» здесь — qualitative synthesis из официальных анонсов, OSS-оркестраторов и обсуждений, а не строгий замер рынка. Ссылки на первоисточники — внизу.</div>
+    <div class="grid g2" style="margin-top:16px">
+      <div class="card">
+        <h3>Зрелость экосистемы Issue → agent → PR</h3>
+        <div class="barrow"><span>GitHub Agent HQ + Copilot agent</span><div class="bar"><div class="fill" style="width:100%"></div></div><b>5/5</b></div>
+        <div class="barrow"><span>OSS оркестраторы (maestro, baton…)</span><div class="bar"><div class="fill" style="width:80%"></div></div><b>4/5</b></div>
+        <div class="barrow"><span>Markdown TASKS.md + AGENTS.md</span><div class="bar"><div class="fill" style="width:80%"></div></div><b>4/5</b></div>
+        <div class="barrow"><span>beads / bd (agent memory hype)</span><div class="bar"><div class="fill" style="width:60%"></div></div><b>3/5</b></div>
+        <div class="barrow"><span>Linear / Jira для агентов</span><div class="bar"><div class="fill" style="width:60%"></div></div><b>3/5</b></div>
+        <p class="small">Шкала — экспертная оценка зрелости связки «формат → агент → PR» по итогам research, не голосование.</p>
+      </div>
+      <div class="card">
+        <h3>Факты, которые решают</h3>
+        <div class="metric">~25K stars</div>
+        <p class="muted">у beads — самый громкий memory-hype H2 2025–2026, но для соло это Dolt + daemon + breaking миграции ради графа, который нужен флоту.</p>
+        <div class="metric">62–67%</div>
+        <p class="muted">OpenHands на SWE-bench 2026 — решает harness (Docker-per-task + fail-to-pass тесты), а не формат prose-контракта. Вывод: Verification &gt; YAML.</p>
+        <div class="metric">+4% / −3%</div>
+        <p class="muted">HN-замеры AGENTS.md: hand-made файл даёт +4% к performance, LLM-сгенерированный −3%. Контракты пиши сам, не доверяй автогенерации.</p>
+      </div>
+    </div>
+    <div class="grid g3" style="margin-top:16px">
+      <article class="card project">
+        <h3>issue-orchestrator</h3>
+        <div><span class="tag">Issues</span><span class="tag">worktrees</span><span class="tag">gates</span></div>
+        <p>Issues → bounded agent runs в изолированных worktrees с gates. Ближайший зрелый аналог твоего UAW-контракта.</p>
+      </article>
+      <article class="card project">
+        <h3>orchestrator-sh</h3>
+        <div><span class="tag">Issues = backend</span><span class="tag">labels = status</span></div>
+        <p>Минимализм: labels — статус, sub-issues — делегирование, CLI-агенты в tmux. Почти 1-в-1 твоя схема.</p>
+      </article>
+      <article class="card project">
+        <h3>TASKS.md + MCP</h3>
+        <div><span class="tag">markdown</span><span class="tag">MCP server</span><span class="tag">linter</span></div>
+        <p>Формализуемый стандарт очереди в одном Markdown + предложение как companion к AGENTS.md (how vs what). Главный конкурент Issues.</p>
+      </article>
+    </div>
+  </section>
+
+  <section id="compare">
+    <div class="kicker">03 · Trade-offs</div>
+    <h2>Ранжированная таблица (single-user VDS)</h2>
+    <div class="card" style="overflow:auto">
+      <table>
+        <thead><tr><th>Формат</th><th>Agents</th><th>Speed</th><th>Telemetry</th><th>Flex</th><th>Setup</th><th>Score</th></tr></thead>
+        <tbody>
+          <tr class="hl"><td><b>GitHub Issues + contract (твой)</b></td><td>5 — нативно все агенты + Agent HQ</td><td>4 — API ~1–2s, gh CLI мгновенно</td><td>5 — issue number = correlation ID</td><td>5 — labels, sub-issues, draft PR</td><td>5 — уже работает</td><td><b>24/25</b></td></tr>
+          <tr><td><b>Markdown-in-repo (TASKS.md)</b></td><td>5 — vendor-neutral, MCP</td><td>5 — zero-latency, offline</td><td>3 — нет ID из коробки</td><td>4 — очередь да, дискуссии нет</td><td>5 — один файл</td><td><b>22/25</b></td></tr>
+          <tr><td><b>Linear</b></td><td>4 — API + MCP</td><td>5 — API быстрее GitHub</td><td>5 — cycles/velocity</td><td>4 — вне git-экосистемы</td><td>2 — сервис + переезд</td><td><b>19/25*</b></td></tr>
+          <tr><td><b>beads / bd</b></td><td>4 — нужен binary у агентов</td><td>4 — локально, Dolt-overhead</td><td>4 — dependency graph</td><td>4 — жёсткая схема</td><td>2 — daemon, миграции</td><td><b>18/25</b></td></tr>
+          <tr><td><b>GitHub Projects (boards)</b></td><td>3 — kanban это human-UI</td><td>3 — API + медленный UI</td><td>4 — burndown из коробки</td><td>3 — план да, очередь нет</td><td>3 — views/workflows</td><td><b>16/25</b></td></tr>
+        </tbody>
+      </table>
+      <p class="small">* Linear: 22/25 raw, −3 за отрыв от кода/PR-экосистемы. Jira — enterprise governance, для соло не рассматривается.</p>
+    </div>
+    <div class="grid g2" style="margin-top:16px">
+      <div class="card"><h3>Почему Issues выигрывают</h3><p><span class="yes">✓</span> Все топ-агенты читают Issues и открывают PR нативно; Copilot agent даёт issue→PR из коробки.</p><p><span class="yes">✓</span> 200+ issues — актив, переезд на Linear окупается только после ~300–500 тикетов.</p><p><span class="yes">✓</span> Langfuse/OTLP трейсинг не зависит от формата; issue number — готовый trace key + EXECUTOR RESULT как span.</p></div>
+      <div class="card"><h3>Где боль Issues</h3><p><span class="no">×</span> API latency ~1–2s и rate limits против zero-latency локального TASKS.md.</p><p><span class="no">×</span> YAML-обёртка избыточна: harness'ы доказывают, что решают Outcome + тесты.</p><p><span class="no">×</span> Нет checkpoint/resume для ночных прогонов — единственный доказанный пробел (Flow, AgentArch).</p></div>
+    </div>
+  </section>
+
+  <section id="arxiv">
+    <div class="kicker">04 · Наука</div>
+    <h2>Что говорит arXiv</h2>
+    <div class="grid g2">
+      <div class="card"><h3>Строгие контракты работают</h3><p class="muted">Know-the-Ropes: fuzzy contracts убивают multi-agent gains — твой формальный контракт теоретически обоснован. AgentMesh (Planner→Coder→Debugger→Reviewer) — академический эквивалент Executor + Reviewer в UAW.</p></div>
+      <div class="card"><h3>Но статики мало</h3><p class="muted">Flow: workflow adjustment during execution важнее initial plan — статичный YAML недостаточен без replanning. SEW: self-evolving workflows бьют hand-crafted — следующий шаг: контракт, который агент сам улучшает.</p></div>
+    </div>
+    <div class="callout" style="margin-top:16px"><b>AgentArch (18 конфигураций):</b> «provably better format» не существует — только trade-offs по design dimensions. Поэтому ниже — не смена формата, а 6 точечных усилений твоего.</div>
+  </section>
+
+  <section id="plan">
+    <div class="kicker">05 · Decision</div>
+    <h2>План из 6 шагов</h2>
+    <div class="timeline">
+      <div class="titem card"><h3>1. Оставить Issues primary queue</h3><p class="muted">Мейнстрим, закреплённый Agent HQ. 200+ issues — актив. Переезд не окупается.</p></div>
+      <div class="titem card"><h3>2. Ужать task_contract v1</h3><p class="muted">Оставить 4 секции (Outcome / Scope / Invariants / Verification), YAML сделать опциональным. Пишут Outcome + тесты, а не схему.</p></div>
+      <div class="titem card"><h3>3. TASKS.md как локальный mirror</h3><p class="muted">Автогенерация из открытых Issues (<code>gh issue list → TASKS.md</code>) — агент на VDS работает без API-лагов, Issues остаются source of truth. Сниппет — ниже.</p></div>
+      <div class="titem card"><h3>4. Не ставить beads</h3><p class="muted">Выигрыш проявляется при ≥3 concurrent agents и long-horizon memory. Пересмотреть только при переходе к флоту.</p></div>
+      <div class="titem card"><h3>5. Langfuse self-hosted на VDS</h3><p class="muted">Один Docker. Issue number как trace tag, EXECUTOR RESULT как span. Собственные цифры latency / cost / success rate по типам задач — ответ на «provably better».</p></div>
+      <div class="titem card"><h3>6. Checkpoint / resume для ночных прогонов</h3><p class="muted">Run-state файл per issue (LangGraph-style или просто state.md) — pause / inspect / replay. Закрывает единственный доказанный пробел статичного контракта.</p></div>
+    </div>
+  </section>
+
+  <section id="kit">
+    <div class="kicker">06 · Practical kit</div>
+    <h2>Готовые куски</h2>
+    <div class="grid g2">
+      <div class="card"><h3>TASKS.md mirror (cron)</h3><pre>gh issue list --repo impedance/san-obsid \
+  --state open --limit 100 \
+  --json number,title,labels \
+  --jq '.[] | "- [ ] #\(.number) \(.title)"' \
+  &gt; TASKS.md</pre></div>
+      <div class="card"><h3>Сжатый контракт (4 секции)</h3><pre>## Outcome
+&lt;один проверяемый результат&gt;
+
+## Scope
+&lt;границы + allowed writes&gt;
+
+## Invariants
+&lt;что нельзя трогать&gt;
+
+## Verification
+&lt;fail-to-pass тесты + evidence&gt;</pre></div>
+    </div>
+    <div class="card" style="margin-top:16px"><h3>Langfuse trace key</h3><pre>trace tag: gh-issue=191
+span: executor-result -&gt; draft PR #NNN + evidence log
+метрики: latency P50/P99, tokens, cost, success rate by task_kind</pre></div>
+  </section>
+
+  <section id="sources">
+    <div class="kicker">Sources</div>
+    <h2>Источники</h2>
+    <div class="card"><ol class="src">
+      <li><a href="https://github.blog/news-insights/company-news/welcome-home-agents">GitHub: Welcome home, agents (Agent HQ)</a> — Issues как native task queue.</li>
+      <li><a href="https://github.com/issue-orchestrator/issue-orchestrator">issue-orchestrator</a> — bounded agent runs в worktrees с gates.</li>
+      <li><a href="https://github.com/gabrielkoerich/orchestrator-sh">orchestrator-sh</a> — Issues = backend, labels = статус.</li>
+      <li><a href="https://github.com/gastownhall/beads">beads</a> + <a href="https://beads.gascity.com">docs</a> — agent memory hype, Dolt-based tracker.</li>
+      <li><a href="https://github.com/tasksmd/tasks.md">TASKS.md</a> + <a href="https://github.com/agentsmd/agents.md/issues/166">companion proposal к AGENTS.md</a> — главный конкурент Issues.</li>
+      <li><a href="https://codesota.com/tasks/swe-bench">SWE-bench 2026 (OpenHands 62–67%)</a> — решает harness + тесты, не формат контракта.</li>
+      <li><a href="https://arxiv.org/html/2512.18470v6">SWE-EVO (arXiv)</a> — задача как release-note + linked PR/issue, machine-checkable spec.</li>
+      <li><a href="https://arxiv.org/html/2501.07834v2">Flow (arXiv)</a> — adjustment during execution важнее initial plan.</li>
+      <li><a href="https://arxiv.org/html/2505.16979v1">Know-the-Ropes (arXiv)</a> — fuzzy contracts убивают multi-agent gains.</li>
+      <li><a href="https://arxiv.org/pdf/2507.19902">AgentMesh (arXiv)</a> — Planner→Coder→Debugger→Reviewer.</li>
+      <li><a href="https://arxiv.org/html/2509.10769">AgentArch (arXiv)</a> — 18 конфигураций, только trade-offs.</li>
+      <li><a href="https://langfuse.com/resources/engineering/coding-agent-tracing">Langfuse: coding agent tracing</a> — телеметрия из OTLP/hooks, не из формата.</li>
+      <li><a href="https://www.langchain.com/langsmith/observability">LangSmith observability</a> — P50/P99, evals, alerting поверх tracing.</li>
+      <li><a href="https://about.gitlab.com/blog/gitlab-duo-agent-platform-public-beta">GitLab Duo Agent Platform</a> — дублирует GitHub-траекторию, enterprise-уклон.</li>
+      <li><a href="https://octopusbuilds.com/blog/linear-vs-jira-vs-github-issues-ai-driven-development">Linear vs Jira vs GitHub Issues (AI-driven)</a> — Linear чище API, GitHub code-native winner.</li>
+    </ol></div>
+  </section>
+
+  <div class="footer">Исследовательский отчёт · данные на 09.10.2026 · full research log: Hermes delegation deleg_9d510c40 · числа — ориентир, ссылки — проверяемы.</div>
+</div>
+</body>
+</html>
